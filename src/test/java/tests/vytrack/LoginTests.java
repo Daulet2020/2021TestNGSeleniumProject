@@ -19,7 +19,6 @@ public class LoginTests extends TestBase {
         wait.until(ExpectedConditions.titleIs("Dashboard"));
         Assert.assertEquals(Driver.getDriver().getTitle(), "Dashboard");
 
-
     }
 
 }

@@ -7,16 +7,34 @@ package pages;
 //so we can keep them here
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.BrowserUtils;
 import utils.Driver;
+
+import javax.swing.*;
 
 public class BasePage {
     @FindBy(css = "div[class='loader-mask shown']")
     public WebElement loaderMask;
+
+    @FindBy(css = "h1[class='oro-subtitle']")
+    public WebElement pageSubTitle;
+
+    @FindBy(css = "#user-menu > a")
+    public WebElement userName;
+
+    @FindBy(linkText = "Logout")
+    public WebElement logOutLink;
+
+    @FindBy(linkText = "My User")
+    public WebElement myUser;
 
     public BasePage(){
 
@@ -24,6 +42,21 @@ public class BasePage {
         //and page class
         //this means this page class
         PageFactory.initElements(Driver.getDriver(), this);
+
+    }
+
+    public boolean waitUntilLoaderMaskDisappear(){
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), 5);
+        try {
+            wait.until(ExpectedConditions.invisibilityOf(loaderMask));
+            return true;
+        } catch (NoSuchElementException e){
+            System.out.println("Loader mask not found");
+            System.out.println(e.getMessage());
+        } catch (WebDriverException e){
+            System.out.println(e.getMessage());
+        }
+        return false;
 
     }
 
@@ -48,6 +81,30 @@ public class BasePage {
         wait.until(ExpectedConditions.invisibilityOf(loaderMask));
 
 
+    }
+    public String getPageSubTitle() {
+        //ant time we are verifying page name, or page subtitle, loader mask appears
+        waitUntilLoaderMaskDisappear();
+        BrowserUtils.waitForStaleElement(pageSubTitle);
+        return pageSubTitle.getText();
+    }
+
+    public String getUserName() {
+        waitUntilLoaderMaskDisappear();
+        BrowserUtils.waitForVisibility(userName, 5);
+        return userName.getText();
+    }
+
+    public void logOut() {
+        BrowserUtils.wait(2);
+        BrowserUtils.clickWithJS(userName);
+        BrowserUtils.clickWithJS(logOutLink);
+    }
+
+    public void goToMyUser() {
+        waitUntilLoaderMaskDisappear();
+        BrowserUtils.waitForClickablility(userName, 5).click();
+        BrowserUtils.waitForClickablility(myUser, 5).click();
     }
 
 }
