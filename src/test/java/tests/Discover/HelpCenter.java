@@ -30,12 +30,12 @@ public class HelpCenter {
         driver.findElement(By.xpath("(//*[@class=\"icon-nav__item-link\"])[1]")).click();
 
     }
-    @Test
-    public void Test1() {
-        String expected = "Cash Back Credit Card";
-        String actual = driver.findElement(By.xpath("//*[@href=\"https://www.discover.com/credit-cards/cash-back/it-card.html\"]")).getText();
-        Assert.assertEquals(expected, actual);
-    }
+   // @Test
+  //  public void Test1() {
+ //      String expected = "Cash Back Credit Card";
+   //     String actual = driver.findElement(By.xpath("//*[@href=\"https://www.discover.com/credit-cards/cash-back/it-card.html\"]")).getText();
+   //     Assert.assertEquals(expected, actual);
+ //   }
     @Test
     public void Test2() {
         List<WebElement> cardBanners = driver.findElements(By.xpath("//div[@class='cards-offer-wrapper cards-offer-comp']"));

@@ -45,42 +45,50 @@ public class BasePage {
 
     }
 
-    public boolean waitUntilLoaderMaskDisappear(){
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), 5);
+    public boolean waitUntilLoaderMaskDisappear() {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), 30);
         try {
-            wait.until(ExpectedConditions.invisibilityOf(loaderMask));
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div[class='loader-mask shown']")));
             return true;
-        } catch (NoSuchElementException e){
-            System.out.println("Loader mask not found");
-            System.out.println(e.getMessage());
-        } catch (WebDriverException e){
-            System.out.println(e.getMessage());
+        } catch (NoSuchElementException e) {
+            System.out.println("Loader mask not found!");
+            e.printStackTrace();
+            return true; // no loader mask, all good, return true
+        } catch (WebDriverException e) {
+            e.printStackTrace();
         }
         return false;
-
     }
 
-    public void navigateTo(String moduleName, String subModuleName){
-        String moduleLocator = "//*[normalize-space()='"+moduleName+"' and @class='title title-level-1]";
-        String subModuleLocator = "//*[normalize-space()='"+subModuleName+"' and @class='title title-level-2]";
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), 10);
+
+    public void navigateTo(String moduleName, String subModuleName) {
+        Actions actions = new Actions(Driver.getDriver());
+        String moduleLocator = "//*[normalize-space()='" + moduleName + "' and @class='title title-level-1']";
+        String subModuleLocator = "//*[normalize-space()='" + subModuleName + "' and @class='title title-level-2']";
+
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), 20);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(moduleLocator)));
 
         WebElement module = Driver.getDriver().findElement(By.xpath(moduleLocator));
-
         wait.until(ExpectedConditions.visibilityOf(module));
         wait.until(ExpectedConditions.elementToBeClickable(module));
 
-        module.click();
+        waitUntilLoaderMaskDisappear();
 
+        BrowserUtils.clickWithWait(module); //if click is not working well
         WebElement subModule = Driver.getDriver().findElement(By.xpath(subModuleLocator));
-        wait.until(ExpectedConditions.visibilityOf(subModule));
-        subModule.click();
-
-        //wait till loader mask disappeared
-        wait.until(ExpectedConditions.invisibilityOf(loaderMask));
-
-
+        if (!subModule.isDisplayed()) {
+            actions.doubleClick(module).doubleClick().build().perform();
+            try {
+                wait.until(ExpectedConditions.visibilityOf(subModule));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                BrowserUtils.clickWithJS(module);
+            }
+        }
+        BrowserUtils.clickWithWait(subModule); //if click is not working well
+        //it waits until page is loaded and ajax calls are done
+        BrowserUtils.waitForPageToLoad(10);
     }
     public String getPageSubTitle() {
         //ant time we are verifying page name, or page subtitle, loader mask appears
