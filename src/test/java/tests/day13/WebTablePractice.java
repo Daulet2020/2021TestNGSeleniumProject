@@ -42,6 +42,9 @@ public class WebTablePractice {
     }
     @Test (description = "Print table 1 data")
     public void Test1(){
+        // <table> stands for web table in HTML
+        //table1 is id of first table
+        //once we find this table as web-element, we can print all text from there
 
         WebElement table = driver.findElement(By.id("table1"));
         System.out.println(table.getText());
@@ -51,7 +54,7 @@ public class WebTablePractice {
 
         int actualColumnNumber = driver.findElements(By.xpath("//table[@id='table1']//th")).size();
         int expectedColumnNum = 6;
-        Assert.assertEquals(actualColumnNumber, expectedColumnNum);
+        Assert.assertEquals(actualColumnNumber, expectedColumnNum, "Not matched");
     }
     @Test (description = "Verify that number of rows is equal to 5")
     public void Test3 (){
@@ -59,7 +62,7 @@ public class WebTablePractice {
         int actualRows = driver.findElements(By.xpath("//table[@id='table1']//tr")).size();
         Assert.assertEquals(actualRows, expectedRows);
     }
-    @Test (description = "Print all values from the 2nd row (excl table header)")
+    @Test (description = "Print all values from the 2nd row (excel table header)")
     public void test4(){
         List<WebElement> row = driver.findElements(By.xpath("//table[@id='table1']//tbody//tr[2]//td"));
         for (WebElement cell : row) {

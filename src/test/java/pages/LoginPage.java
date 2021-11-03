@@ -45,4 +45,6 @@ public class LoginPage extends BasePage{
         passwordInput.sendKeys(password, Keys.ENTER);
     }
 
+    public void waitForPageSubTitle(String pageSubTitle) {
+    }
 }
