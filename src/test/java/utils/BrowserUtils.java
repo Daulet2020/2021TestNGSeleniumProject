@@ -110,6 +110,18 @@ public class BrowserUtils {
         return target;
     }
 
+    /*public static void main(String[] args) {
+        SimpleDateFormat df = new SimpleDateFormat("MMM/dd/yyyy HH:mm");
+        String date = df.format(new Date());
+        System.out.println(date);
+    }
+    */
+
+    /*public static void main(String[] args) {
+        System.out.println(System.getProperty("user.dir"));
+    }
+    */
+
     /**
      * Wait 15 seconds with polling interval of 200 milliseconds then click
      *

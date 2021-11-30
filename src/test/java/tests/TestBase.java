@@ -9,9 +9,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
+import utils.BrowserUtils;
 import utils.ConfigurationReader;
 import utils.Driver;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 //this class will be a test foundation for all test classes
@@ -25,6 +27,7 @@ public abstract class TestBase {
     protected ExtentReports extentReports;
     protected ExtentHtmlReporter extentHtmlReporter;
     protected ExtentTest extentTest;
+    //Defines a test. You can add logs, snapshots, assign author and categories to a test and its children
 
     @BeforeTest
     public void beforeTest(){
@@ -51,8 +54,22 @@ public abstract class TestBase {
 
     }
 
+    //ITestResult class describes the result of the test. (in TestNG)
     @AfterMethod
-    public void teardown (ITestResult result){
+    public void teardown (ITestResult result) {
+        if (result.getStatus() == ITestResult.FAILURE) {
+        extentTest.fail(result.getName());
+        extentTest.fail(result.getThrowable());
+            try {
+                extentTest.addScreenCaptureFromPath(BrowserUtils.getScreenshot(result.getName()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(result.getStatus()==ITestResult.SKIP){
+            extentTest.skip("Test case was skipped: "+result.getName());
+        }
+
+
         Driver.close();
 
     }

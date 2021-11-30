@@ -29,7 +29,7 @@ public class CreateCalendarEventTest extends TestBase {
         calendarEventsPage.clickToCreateCalendarEvent();
 
         calendarEventsPage.waitUntilLoaderMaskDisappear();
-        String expectedOwner = "Stephan Haley";
+        String expectedOwner = "John Doe";
         String actualOwner = createCalendarEventPage.owner.getText().trim();
 
         Assert.assertEquals(actualOwner, expectedOwner);
